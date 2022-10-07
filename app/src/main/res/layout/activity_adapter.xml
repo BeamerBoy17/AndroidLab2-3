@@ -11,6 +11,8 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginTop="28dp"
+      android:backgroundTint="#3F51B5"
+      android:backgroundTintMode="add"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_weight="4"
       app:layout_constraintLeft_toLeftOf="parent"
@@ -20,12 +22,14 @@
 
   <Button
       android:id="@+id/add"
-      android:layout_width="0dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="30dp"
       android:layout_marginTop="80dp"
+      android:backgroundTint="#3F51B5"
       android:onClick="add"
       android:text="add"
+      android:textColor="@color/purple_200"
       app:layout_constraintHorizontal_weight="1"
       app:layout_constraintLeft_toRightOf="@+id/userName"
       app:layout_constraintRight_toLeftOf="@+id/remove"
@@ -34,11 +38,13 @@
 
   <Button
       android:id="@+id/remove"
-      android:layout_width="107dp"
-      android:layout_height="50dp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_marginTop="80dp"
+      android:backgroundTint="#3F51B5"
       android:onClick="remove"
       android:text="remove"
+      android:textColor="@color/purple_200"
       app:layout_constraintHorizontal_weight="1"
       app:layout_constraintLeft_toRightOf="@+id/add"
       app:layout_constraintRight_toRightOf="parent"
@@ -46,16 +52,23 @@
 
   <ListView
       android:id="@+id/usersList"
-      android:layout_width="411dp"
-      android:layout_height="554dp"
-      android:choiceMode="multipleChoice"
+      android:layout_width="366dp"
+      android:layout_height="550dp"
 
+      android:backgroundTint="#3F51B5"
+      android:cacheColorHint="#3F51B5"
+      android:choiceMode="multipleChoice"
+      android:duplicateParentState="false"
+      android:foregroundTint="#3F51B5"
+      android:isScrollContainer="false"
+      android:nestedScrollingEnabled="true"
+      android:overScrollMode="always"
       android:scrollingCache="true"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintHorizontal_bias="0.488"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/userName"
-      app:layout_constraintVertical_bias="0.984"></ListView>
+      app:layout_constraintVertical_bias="0.99"></ListView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
