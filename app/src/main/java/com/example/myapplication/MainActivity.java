@@ -3,18 +3,21 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.app.AlertDialog;
-import android.widget.Toast;
-
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 
 public class MainActivity extends AppCompatActivity {
+
+    SharedPreferences sPref;
+    EditText nameText;
+    final String SAVED_TEXT = "saved_text";
 
     private final static String TAG= "MainActivity";
     @Override
@@ -22,45 +25,41 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "OnCreate");
-        Button button2 =findViewById(R.id.button2);
-        Button button1 = findViewById(R.id.button1);
-        button1.setOnClickListener(new View.OnClickListener() {
+        nameText = (EditText) findViewById(R.id.Name);
+        loadText();
+        Button enter =  findViewById(R.id.button1);
+        enter.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                EditText nameText = findViewById(R.id.Name);
                 String name = nameText.getText().toString();
                 Intent intent= new Intent(MainActivity.this,AdapterActivity.class);
                 intent.putExtra("name", name);
                 startActivity(intent);
             }
         });
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mySimpleDialog();
-            }
-        });
 
     }
 
-    private void mySimpleDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Dialog");
-        builder.setMessage("Test Message");
-        builder.setNeutralButton("Ignore", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        AlertDialog dialog= builder.create();
-        dialog.show();
+    void saveText(){
+        sPref = getPreferences(MODE_PRIVATE);
+        Editor ed = sPref.edit();
+        ed.putString(SAVED_TEXT, nameText.getText().toString());
+        ed.commit();
+
+    }
+    void loadText() {
+        sPref = getPreferences(MODE_PRIVATE);
+        Editor ed = sPref.edit();
+        String savedText = sPref.getString(SAVED_TEXT, "");
+        nameText.setText(savedText);
+
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        saveText();
         Log.d(TAG, "onDestroy");
     }
     @Override
