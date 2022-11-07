@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter new password"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/newPass"
+        android:layout_width="297dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/darker_gray"
+        android:cursorVisible="false"
+        android:textColor="@color/purple_200"
+        tools:ignore="MissingConstraints">
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="296dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
+
+</LinearLayout>
