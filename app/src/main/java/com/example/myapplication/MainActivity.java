@@ -1,9 +1,12 @@
 package com.example.myapplication;
 
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     Button signUp;
     EditText username;
     EditText password;
-    User user;
     TextView errorMessage;
     DataBaseHandler db = new DataBaseHandler(this);
 
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
+        final Context Enter = MainActivity.this.getApplicationContext();
         username = findViewById(R.id.Name);
         password = findViewById(R.id.Password);
         signUp = findViewById(R.id.signUp);
@@ -41,17 +43,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 User logUser = new User(username.getText().toString().trim(), password.getText().toString().trim());
-                if(logUser.getLogin().equals("") || logUser.getPass().equals("")) {
-                    errorMessage.setText("Заполните поля!");
-                    errorMessage.setVisibility(View.VISIBLE);
-                }else if(CheckUser(logUser)){
-                    db.close();
-                    Intent.putExtra("user", logUser);
-                    startActivity(Intent);
-                }else{
-                    errorMessage.setText("Неверный логин или пароль!");
-                    errorMessage.setVisibility(View.VISIBLE);
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(logUser.getLogin().equals("") || logUser.getPass().equals("")) {
+                            errorMessage.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    errorMessage.setText("Заполните поля!");
+                                    errorMessage.setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }else if(CheckUser(logUser)){
+                            db.close();
+                            Intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                            Intent.putExtra("user", logUser);
+                            Enter.startActivity(Intent);
+
+                        }else{
+                            errorMessage.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    errorMessage.setText("Неверный логин или пароль!");
+                                    errorMessage.setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }
+                    }
+                }).start();
+
             }
         });
         signUp.setOnClickListener(new View.OnClickListener() {

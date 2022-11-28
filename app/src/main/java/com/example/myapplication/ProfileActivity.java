@@ -3,6 +3,8 @@ package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.widget.Toast;
+import
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     final Context context = this;
@@ -26,11 +29,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     Toast toast;
     DataBaseHandler db = new DataBaseHandler(this);
     User user = new User();
-
+    final Handler handler = new Handler(Looper.getMainLooper());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
         userName = findViewById(R.id.userName);
         Bundle arguments = getIntent().getExtras();
         if(arguments!=null){
@@ -62,47 +66,58 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.deleteUser:
-                db.deleteUserFromDB(user);
-                db.close();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        db.deleteUserFromDB(user);
+                        db.close();
+                    }
+                }).start();
                 startActivity(intent);
                 break;
 
             case R.id.changePass:
-                LayoutInflater li = LayoutInflater.from(context);
-                View passView = li.inflate(R.layout.dialog_change_pass, null);
-                AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(context);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        LayoutInflater li = LayoutInflater.from(context);
+                        View passView = li.inflate(R.layout.dialog_change_pass, null);
+                        AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(context);
 
-                mDialogBuilder.setView(passView);
-                final EditText userInput = (EditText) passView.findViewById(R.id.newPass);
-                mDialogBuilder
-                        .setCancelable(false)
-                        .setPositiveButton("Accept",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,int id) {
-                                        String newPwd = userInput.getText().toString();
-                                        System.out.println("new " + newPwd);
-                                        System.out.println(user.getPass());
-                                        if(newPwd.equals("")){
+                        mDialogBuilder.setView(passView);
+                        final EditText userInput = (EditText) passView.findViewById(R.id.newPass);
+                        mDialogBuilder
+                                .setCancelable(false)
+                                .setPositiveButton("Accept",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog,int id) {
+                                                String newPwd = userInput.getText().toString();
+                                                System.out.println("new " + newPwd);
+                                                System.out.println(user.getPass());
+                                                if(newPwd.equals("")){
 
-                                        }else if(newPwd.equals(user.getPass())) {
-                                            toast=Toast.makeText(ProfileActivity.this,"Password match",Toast.LENGTH_SHORT);
-                                            toast.show();
-                                        } else {
-                                            toast=Toast.makeText(ProfileActivity.this,"Succes",Toast.LENGTH_SHORT);
-                                            toast.show();
-                                            db.updateUserPassword(user, newPwd);
-                                            db.close();
-                                        }
+                                                }else if(newPwd.equals(user.getPass())) {
+                                                    toast=Toast.makeText(ProfileActivity.this,"Password match",Toast.LENGTH_SHORT);
+                                                    toast.show();
+                                                } else {
+                                                    toast=Toast.makeText(ProfileActivity.this,"Succes",Toast.LENGTH_SHORT);
+                                                    toast.show();
+                                                    db.updateUserPassword(user, newPwd);
+                                                    db.close();
+                                                }
 
-                                    }
-                                })
-                        .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                                            }
+                                        })
+                                .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,int id) {
                                         dialog.cancel();
                                     }
                                 });
-                AlertDialog alertDialog = mDialogBuilder.create();
-                alertDialog.show();
+                        AlertDialog alertDialog = mDialogBuilder.create();
+                        alertDialog.show();
+                    }
+                });
+
                 break;
             default:
                 break;

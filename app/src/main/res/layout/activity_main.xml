@@ -25,23 +25,6 @@
         app:layout_constraintVertical_bias="0.905"
         tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/Text"
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Hello!"
-        android:textColor="@color/purple_200"
-        android:textSize="64px"
-        app:autoSizeMinTextSize="24px"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.355"
-        tools:ignore="MissingConstraints" />
-
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
